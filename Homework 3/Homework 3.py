@@ -118,7 +118,7 @@ for i in list(range(max_time_interations)):
         df2 = pd.DataFrame({time: vals})
         df[time] = df2[time]
         curr_time_iteration += 1
-        boundary_T += 3.8
+        boundary_T += 0
         # print("New iteration: {}".format(curr_time_iteration))
     else:
         curr_time_iteration += 1
