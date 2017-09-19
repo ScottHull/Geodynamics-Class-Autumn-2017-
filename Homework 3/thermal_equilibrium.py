@@ -3,6 +3,13 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 
+# Scott D. Hull, 2017
+# Models thermal equilibrium of a subducting slab into the mantle as a function of time.
+# Assumption is a vertical slab of 100km thickness (can adjust) going into an isotherm mantle (can also adjust to add
+#   a temperature gradient.
+# Spits out a pretty plot and a rather large output file.
+
+
 
 if "therm_eq.csv" in os.listdir(os.getcwd()):
     os.remove("therm_eq.csv")
