@@ -21,7 +21,7 @@ deltaTime = (0.2 * deltaX**2) / Kappa # years, the time in between iterations
 boundary_T = 0 # degK, isotherm, can add geotherm below in the for loop
 body_T = 1800 # degK, downgoing body initial temperature
 body_thickness = 100 #km, the thickness of the downgoing body into the mantle
-max_time_interations = 25000 # number of model iterations
+max_time_interations = 26000 # number of model iterations
 curr_time_iteration = 1 # tracks current model iteraiton
 print("\nModel Parameters:\nKappa: {} km^2/yr\ndeltaTime: {} years\ndeltaX: {} km\nSlab Thickness: {} km\nMax model iterations: {} ({} billion years)\n".format(
     Kappa, deltaTime, deltaX, body_thickness, max_time_interations, (max_time_interations*deltaTime) / (1*10**9)))
@@ -98,7 +98,10 @@ df.to_csv("therm_eq.csv")
 
 df2 = df
 df2['Depth'] = df2.index
-plt.Figure()
+fig1 = plt.figure()
+fig2 = plt.figure()
+ax1 = fig1.add_subplot(111)
+ax2 = fig2.add_subplot(111)
 new = df2.iloc[0:body_thickness + 1, 3:]
 temp = []
 for row in new.iterrows():
@@ -107,11 +110,20 @@ for row in new.iterrows():
 for index, i in enumerate(temp):
     if index != 0:
         if body_thickness % index == 0:
-            plt.plot(list(range(len(i))), i, label=str(index) + 'km in body')
+            ax1.plot(list(range(len(i))), i, label=str(index) + 'km in body')
+for i in list(range(max_time_interations)):
+    if i % 5000 == 0 and i != 0:
+        temps = df[str(i)]
+        depths = df['Depth']
+        ax2.plot(temps, depth, label='{} years'.format(round(i*deltaTime, 2)))
 plt.grid()
-plt.xlabel("Model Iterations (1 iteration = {} years)".format(round(deltaTime, 2)))
-plt.ylabel('Body temperature (degK)')
-plt.title("Thermal Equilibrium")
-plt.legend(loc='upper right')
+ax1.set_xlabel("Model Iterations (1 iteration = {} years)".format(round(deltaTime, 2)))
+ax2.set_xlabel("Temperature (degK)")
+ax2.set_ylabel("Radius (km)")
+ax1.set_ylabel('Body temperature (degK)')
+ax1.set_title("Thermal Equilibrium (Time vs Temperature)")
+ax2.set_title("Thermal Equilibrium (Radius vs Temperature)")
+ax1.legend(loc='upper right')
+ax2.legend(loc='upper right')
 plt.show()
 plt.close()
