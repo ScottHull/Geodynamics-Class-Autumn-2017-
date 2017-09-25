@@ -115,15 +115,17 @@ for i in list(range(max_time_interations)):
     if i % 5000 == 0 and i != 0:
         temps = df[str(i)]
         depths = df['Depth']
-        ax2.plot(temps, depth, label='{} years'.format(round(i*deltaTime, 2)))
+        ax2.plot(temps, depths, label='{} years'.format(round(i*deltaTime, 2)))
 plt.grid()
 ax1.set_xlabel("Model Iterations (1 iteration = {} years)".format(round(deltaTime, 2)))
 ax2.set_xlabel("Temperature (degK)")
-ax2.set_ylabel("Radius (km)")
+ax2.set_ylabel("Diameter (km)")
 ax1.set_ylabel('Body temperature (degK)')
 ax1.set_title("Thermal Equilibrium (Time vs Temperature)")
-ax2.set_title("Thermal Equilibrium (Radius vs Temperature)")
+ax2.set_title("Thermal Equilibrium (Temperature vs Diameter)")
 ax1.legend(loc='upper right')
 ax2.legend(loc='upper right')
+ax1.grid()
+ax2.grid()
 plt.show()
 plt.close()
