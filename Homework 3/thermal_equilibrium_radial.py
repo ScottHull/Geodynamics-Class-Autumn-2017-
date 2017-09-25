@@ -37,6 +37,7 @@ for i in list(reversed(depth))[:-2]:
 for i in half_depth:
     adjusted_depth.append(i)
 
+
 df = pd.DataFrame({'Depth': adjusted_depth, "Initial Condition": [body_T for i in list(range(len(adjusted_depth)))]})
 for i in list(range(max_time_interations)):
     time = str(curr_time_iteration)
@@ -111,6 +112,6 @@ plt.grid()
 plt.xlabel("Model Iterations (1 iteration = {} years)".format(round(deltaTime, 2)))
 plt.ylabel('Slab temperature (degK)')
 plt.title("Thermal Equilibrium")
-plt.legend(loc='lower right')
+plt.legend(loc='upper right')
 plt.show()
 plt.close()
