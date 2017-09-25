@@ -37,7 +37,6 @@ for i in list(reversed(depth))[:-2]:
 for i in half_depth:
     adjusted_depth.append(i)
 
-
 df = pd.DataFrame({'Depth': adjusted_depth, "Initial Condition": [body_T for i in list(range(len(adjusted_depth)))]})
 for i in list(range(max_time_interations)):
     time = str(curr_time_iteration)
