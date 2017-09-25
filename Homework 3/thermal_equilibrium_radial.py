@@ -110,7 +110,7 @@ for index, i in enumerate(temp):
             plt.plot(list(range(len(i))), i, label=str(index) + 'km in body')
 plt.grid()
 plt.xlabel("Model Iterations (1 iteration = {} years)".format(round(deltaTime, 2)))
-plt.ylabel('Slab temperature (degK)')
+plt.ylabel('Body temperature (degK)')
 plt.title("Thermal Equilibrium")
 plt.legend(loc='upper right')
 plt.show()
