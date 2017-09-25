@@ -5,8 +5,8 @@ import matplotlib.pyplot as plt
 
 # Scott D. Hull, 2017
 # Models thermal equilibrium of a subducting slab into the mantle as a function of time.
-# Assumption is a vertical slab of 100km thickness (can adjust) going into an isothermal mantle (can also adjust to add
-#   a temperature gradient).
+# Assumption is a vertical slab of 100km thickness (can adjust) going into an isotherm mantle (can also adjust to add
+#   a temperature gradient.
 # Spits out a pretty plot and a rather large output file.
 
 
@@ -20,7 +20,7 @@ deltaTime = (0.2 * deltaX**2) / Kappa # years, the time in between iterations
 boundary_T = 1800 # degK, isotherm, can add geotherm below in the for loop
 slab_T = 300 # degK, downgoing slab initial temperature
 slab_thickness = 100 #km, the thickness of the downgoing slab into the mantle
-max_time_interations = 25000 # number of model iterations
+max_time_interations = 1000 # number of model iterations
 curr_time_iteration = 1 # tracks current model iteraiton
 print("\nModel Parameters:\nKappa: {} km^2/yr\ndeltaTime: {} years\ndeltaX: {} km\nSlab Thickness: {} km\nMax model iterations: {} ({} billion years)".format(
     Kappa, deltaTime, deltaX, slab_thickness, max_time_interations, (max_time_interations*deltaTime) / (1*10**9)))
@@ -52,6 +52,8 @@ for i in list(range(max_time_interations)):
         curr_time_iteration += 1
         boundary_T += 0 # add a geotherm
         # print("New iteration: {}".format(curr_time_iteration))
+        if curr_time_iteration % 10 == 0:
+            print("New iteration: {}".format(curr_time_iteration))
     else:
         curr_time_iteration += 1
 
