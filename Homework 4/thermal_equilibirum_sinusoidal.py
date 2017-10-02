@@ -72,7 +72,7 @@ for i in df2:
 #     if index != 0:
 #         if model_depth % index == 0:
 #             plt.plot(list(range(len(i))), i, label=str(index) + 'depth')
-plt.vlines(T_o, ymin=0, ymax=model_depth, linestyles=':', label='Initial Mantle T', color='r', linewidth=2)
+plt.vlines(T_o, ymin=0, ymax=model_depth, linestyles=':', label='Initial Crust T', color='r', linewidth=2)
 plt.gca().invert_yaxis()
 plt.grid()
 plt.xlabel("Temperature (degK)")
