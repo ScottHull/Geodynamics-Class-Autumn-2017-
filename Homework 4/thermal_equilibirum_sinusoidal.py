@@ -1,28 +1,34 @@
 import os
 import pandas as pd
 import matplotlib.pyplot as plt
-from math import cos, pi
+from math import cos, pi, exp, sqrt
 
 
 # Scott D. Hull, 2017
 
 
 
+
+
 if "therm_eq.csv" in os.listdir(os.getcwd()):
     os.remove("therm_eq.csv")
 
-Kappa = 0.000005 * 3.154*10**7 * 1*10**-6 # convert seconds to years, m^2 to km^2, the thermal diffusivity
-deltaX = 1 # km, change in position per iteration
+Kappa = 0.000005 # convert seconds to years, m^2 to km^2, the thermal diffusivity
+deltaX = 1 # m, change in position per iteration
 deltaTime = (0.2 * deltaX**2) / Kappa # years, the time in between iterations
-frequency = (2*pi)/(1*10**7)
+period = (2*pi)/(pi*10**7)
 surface_maxT = 800
-def boundary_T(N_timesteps, deltaT=deltaTime, frequency=frequency, T_not_surf=surface_maxT):
-    boundary_t = T_not_surf + float(100*cos(frequency*(deltaT*N_timesteps)))
+def boundary_T(N_timesteps, deltaT=deltaTime, period=period, T_not_surf=surface_maxT):
+    boundary_t = T_not_surf + float(100*cos(period*(deltaT*N_timesteps)))
     return boundary_t
 model_depth = 100 # m
 T_o = 800
-max_time_iterations = 10000
+max_time_iterations = 1000
 curr_time_iteration = 1
+
+def given_formula(depth, time, T_o=T_o, period=period, K=Kappa, deltaT=100):
+    T = T_o + deltaT*exp(-depth*sqrt(period/(2*K)))*cos((period*time)+depth*sqrt(period/(2*K)))
+    return T
 
 
 df = pd.DataFrame({'Depth': [i for i in list(range(model_depth + 1))], "Initial Condition": [T_o for i in list(range(model_depth + 1))]})
@@ -65,14 +71,20 @@ for row in new.iterrows():
     temp.append(data.tolist())
 for i in df2:
     if i != 'Depth' and i != "" and i != "Initial Condition":
-        if float(i) % 1500 == 0:
+        if float(i) % 500 == 0:
+            formula_temps = []
             time = float(i) * deltaTime
-            plt.plot(df2[i], df2['Depth'], label='Time: {:.2e} yrs'.format(round(time, 1)))
+            plt.plot(df2[i], df2['Depth'], label='Time: {:.2e} yrs (Numerical)'.format(round(time, 1)))
+            for z in df2['Depth']:
+                formula_temps.append(given_formula(depth=z, time=float(i)*deltaTime))
+            plt.plot(formula_temps, df2['Depth'], label='Time: {:.2e} yrs (Analytical)'.format(round(time, 1)))
+
+
 # for index, i in enumerate(temp):
 #     if index != 0:
 #         if model_depth % index == 0:
 #             plt.plot(list(range(len(i))), i, label=str(index) + 'depth')
-plt.vlines(T_o, ymin=0, ymax=model_depth, linestyles=':', label='Initial Crust T', color='r', linewidth=2)
+plt.vlines(T_o, ymin=0, ymax=model_depth, linestyles=':', label='Initial Mantle T', color='r', linewidth=2)
 plt.gca().invert_yaxis()
 plt.grid()
 plt.xlabel("Temperature (degK)")
@@ -81,3 +93,24 @@ plt.title("Thermal Equilibrium In Oscillating Surface Temperature Scenario")
 plt.legend(loc='lower right')
 plt.show()
 plt.close()
+
+time2 = list(range(round(max_time_iterations+1)))[1:]
+plt.figure()
+for row in df2.index:
+    if df2['Depth'][row] % 5 == 0 and df2['Depth'][row] <= 15:
+        temps = []
+        formula_temps = []
+        for z in df2:
+            temps.append(df2[z][row])
+        for r in time2:
+            formula_temps.append(given_formula(depth=df2['Depth'][row], time=r*deltaTime))
+        plt.plot(time2, temps[2:], label='Depth: {} (Numerical)'.format(df2['Depth'][row]))
+        plt.plot(time2, formula_temps, label='Depth: {} (Analytical)'.format(df2['Depth'][row]))
+plt.grid()
+plt.xlabel("Time Iterations (1 iteration = {} sec)".format(deltaTime))
+plt.ylabel('Temperature (degK)')
+plt.title("Thermal Equilibrium In Oscillating Surface Temperature Scenario")
+plt.legend(loc='lower right')
+plt.show()
+plt.close()
+
